@@ -1,0 +1,282 @@
+/* Spotify widget - Cloud Phone (QVGA 240x320 / QQVGA 128x160) icin tasarlandi.
+   Dokunmatik yok: her sey ok tuslari + Enter ile kullanilabilir olmali. */
+
+:root {
+  --green: #1db954;
+  --bg: #121212;
+  --panel: #1c1c1c;
+  --raised: #282828;
+  --text: #f3f1e9;
+  --muted: #a3a3a3;
+  --line: #383838;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* hidden niteligi display:flex/grid kurallarini ezmemeli */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Roboto, "Roboto Condensed", system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.25;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg);
+}
+
+/* ---------------- ust bar ----------------
+   Cloud Phone tasarim kilavuzu: QVGA header ~40px, QQVGA ~20px.
+   Kisaltma yerine marquee: uzun basliklar kayarak okunur. */
+.topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 10px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.brand { display: flex; align-items: center; gap: 6px; }
+
+.logo {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--green);
+  position: relative;
+  overflow: hidden;
+}
+.logo::after {
+  content: ""; position: absolute; left: 3px; top: 6px;
+  width: 10px; height: 5px;
+  border: 1.6px solid #000; border-color: #000 transparent transparent #000;
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.net { color: var(--green); font-size: 12px; }
+.net.off { color: #ff6b5e; }
+
+/* ---------------- govde ---------------- */
+.views { flex: 1 1 auto; position: relative; overflow: hidden; }
+.view { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; }
+
+.hintline {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  background: #171717;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* marquee: uzun basliklarda kisaltma yerine kaydirma (Cloud Phone kilavuzu) */
+.mq {
+  width: max-content;
+  text-overflow: clip;
+  animation: mq 12s linear 1s infinite;
+}
+@keyframes mq {
+  0%, 10%  { transform: translateX(0); }
+  85%, 100% { transform: translateX(calc(-100% + 150px)); }
+}
+
+.empty { padding: 12px 10px; color: var(--muted); font-size: 12px; text-align: center; }
+
+/* ---------------- liste ---------------- */
+.list {
+  flex: 1 1 auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #1f1f1f;
+  cursor: pointer;
+}
+
+.item .num { width: 16px; color: var(--muted); font-size: 10px; text-align: right; flex: 0 0 auto; }
+.item .txt { flex: 1 1 auto; min-width: 0; }
+.item .title { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .artist { display: block; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .fav { flex: 0 0 auto; color: var(--green); font-size: 11px; }
+.item .fav.off { color: #4a4a4a; }
+
+/* secili oge - focus halkasi (klavye ile gezinmede zorunlu) */
+.item.sel { background: var(--raised); box-shadow: inset 3px 0 0 var(--green); }
+.item.sel .title { color: #fff; font-weight: 700; }
+
+/* ---------------- oynatici ---------------- */
+.now { flex: 0 0 auto; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.now-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.now-artist { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.embed {
+  flex: 1 1 auto;
+  min-height: 96px;
+  background: #000;
+  overflow: hidden;
+}
+.embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+.embed audio { width: 100%; height: 30px; display: block; }
+
+.actions { flex: 0 0 auto; list-style: none; margin: 0; padding: 3px 0; background: var(--panel); border-top: 1px solid var(--line); }
+.actions li {
+  padding: 5px 8px;
+  font-size: 12px;
+  border-left: 3px solid transparent;
+}
+.actions li.sel { background: var(--raised); border-left-color: var(--green); font-weight: 700; }
+
+/* ---------------- overlay (menu / arama) ---------------- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .72);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 5;
+}
+
+.panel {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.panel-head { padding: 6px 8px; font-size: 12px; font-weight: 700; background: var(--raised); border-bottom: 1px solid var(--line); }
+.panel-help { padding: 6px 8px; font-size: 10px; color: var(--muted); line-height: 1.5; }
+
+.menu-list { list-style: none; margin: 0; padding: 0; }
+.menu-list li { padding: 6px 8px; font-size: 12px; border-left: 3px solid transparent; }
+.menu-list li.sel { background: var(--raised); border-left-color: var(--green); font-weight: 700; }
+
+.info-body { padding: 6px 8px; font-size: 10px; line-height: 1.5; }
+.info-body .row { margin-bottom: 5px; }
+.info-body .k { color: var(--muted); }
+.info-body .v { color: var(--text); word-break: break-all; }
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  margin: 0;
+  background: var(--raised);
+  color: var(--text);
+  border: 0;
+  border-top: 1px solid var(--line);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.btn.wide { border-radius: 0; border-top: 1px solid var(--line); }
+.btn:active, .btn.sel { background: #333; color: #fff; }
+
+.cursor { color: var(--green); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------------- alt soft key bar ---------------- */
+.softbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  height: 24px;
+  padding: 0 4px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+
+.soft {
+  background: none;
+  border: 0;
+  color: var(--green);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.soft:focus-visible, .soft:active { outline: 1px solid var(--green); }
+
+.tip { flex: 1 1 auto; text-align: center; font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------------- QQVGA (128x160) icin sikilastirilmis mod ---------------- */
+.compact .topbar { height: 20px; font-size: 12px; }
+.compact .logo { width: 12px; height: 12px; }
+.compact .item { padding: 3px 6px; }
+.compact .item .title { font-size: 11px; }
+.compact .item .artist { font-size: 9px; }
+.compact .hintline { font-size: 9px; padding: 2px 4px; }
+.compact .softbar { height: 20px; }
+.compact .soft { font-size: 10px; }
+.compact .tip { font-size: 9px; }
+.compact .menu-list li, .compact .actions li { padding: 4px 6px; font-size: 11px; }
+/* QQVGA'da ipucu metni soft key'lere biniyor - gizlenir */
+.compact .tip { display: none; }
+.compact .softbar { justify-content: space-between; }
+
+/* ---------------- ilerleme cubugu (SDK oynatma) ---------------- */
+.progress {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+}
+.pbar {
+  flex: 1 1 auto;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  display: block;
+}
+.pfill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+}
+.ptime {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.compact .progress { padding: 2px 4px; }
+.compact .ptime { font-size: 9px; }

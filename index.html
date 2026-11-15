@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="theme-color" content="#121212" />
+<title>Spotify</title>
+<link rel="icon" href="assets/icon-80.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <span class="brand"><span class="logo"></span>Spotify</span>
+    <span class="net" id="net" title="bağlantı durumu">&#9679;</span>
+  </header>
+
+  <main class="views">
+
+    <!-- LİSTE EKRANI -->
+    <section class="view" id="view-list">
+      <div class="hintline" id="hintline">Bugünün pop&uuml;ler</div>
+      <ul class="list" id="list" aria-label="&#351;ark&#305; listesi"></ul>
+      <div class="empty" id="empty" hidden>Sonu&ccedil; bulunamad&#305;</div>
+    </section>
+
+    <!-- OYNATICI EKRANI -->
+    <section class="view" id="view-player" hidden>
+      <div class="now">
+        <div class="now-title" id="nowTitle">&mdash;</div>
+        <div class="now-artist" id="nowArtist">&mdash;</div>
+      </div>
+      <div class="progress" id="progress" hidden>
+        <span class="pbar"><span class="pfill" id="pfill"></span></span>
+        <span class="ptime" id="ptime">0:00 / 0:00</span>
+      </div>
+      <div class="embed" id="embed"></div>
+      <ul class="actions" id="actions" aria-label="eylemler"></ul>
+    </section>
+
+  </main>
+
+  <!-- ARAMA PANELI (LSK > Ara) -->
+  <div class="overlay" id="search" hidden>
+    <div class="panel">
+      <div class="panel-head">Ara: <span id="qtext"></span><span class="cursor">_</span></div>
+      <div class="panel-help">
+        2=abc 3=def 4=ghi 5=jkl 6=mno<br />
+        7=pqrs 8=tuv 9=wxyz 0=bo&#351;luk<br />
+        *=sil #=temizle Enter=ara
+      </div>
+      <button class="btn wide" id="btnSearchGo">Ara</button>
+    </div>
+  </div>
+
+  <!-- MENU (LSK) -->
+  <div class="overlay" id="menu" hidden>
+    <div class="panel">
+      <div class="panel-head">Menu</div>
+      <ul class="menu-list" id="menuList"></ul>
+    </div>
+  </div>
+
+  <!-- BILGI PANELI (Menu > Hakkinda) -->
+  <div class="overlay" id="info" hidden>
+    <div class="panel">
+      <div class="panel-head">Bilgi</div>
+      <div class="info-body" id="infoBody"></div>
+      <button class="btn wide" id="btnInfoClose">Kapat</button>
+    </div>
+  </div>
+
+  <footer class="softbar">
+    <button class="soft" id="lsk" type="button">Menu</button>
+    <span class="tip" id="tip">&#8593;&#8595; se&ccedil; &middot; Enter a&ccedil;</span>
+    <button class="soft" id="rsk" type="button">Geri</button>
+  </footer>
+
+</div>
+<script src="js/config.js"></script>
+<script src="js/spotify.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
